@@ -51,11 +51,11 @@
     "npm": ">=9.0.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,md,json}": [
+    "src/**/*.{css,md,json}": [
       "prettier --write"
     ]
   },
