@@ -1,1 +1,3 @@
 node_modules
+.next
+.qa_template.md
