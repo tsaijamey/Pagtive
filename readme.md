@@ -142,3 +142,85 @@ pagtive/
 - 优化预览体验
 - 完善打包功能
 - 提供示例项目
+
+### 7. 沙箱预览系统
+
+#### 7.1 架构设计
+沙箱预览系统是项目的核心组件之一，用于安全地加载和预览用户生成的代码。系统采用以下架构设计：
+
+##### 核心组件
+- **CodePreviewSandbox**：沙箱容器组件
+  - 提供隔离的 iframe 环境
+  - 管理 HTML、CSS、JavaScript 代码的注入
+  - 错误捕获和状态管理
+
+- **PreviewPage**：预览页面组件
+  - 基于动态路由实现（[id].tsx）
+  - 负责数据获取和状态管理
+  - 集成沙箱容器组件
+
+##### 安全机制
+- iframe sandbox 属性限制：
+  - `allow-scripts`：允许执行脚本
+  - `allow-same-origin`：允许同源访问
+  - 默认禁用其他权限（如弹窗、表单提交等）
+
+- 代码执行隔离：
+  - JavaScript 代码在独立作用域中执行
+  - 使用 IIFE (Immediately Invoked Function Expression) 包装
+  - 全局错误捕获和消息传递机制
+
+#### 7.2 实现流程
+
+1. **代码加载流程**
+   - 通过 API 获取预览数据（HTML、CSS、JavaScript）
+   - 构建完整的 HTML 文档结构
+   - 注入重置样式和自定义样式
+   - 包装 JavaScript 代码并添加错误处理
+
+2. **错误处理机制**
+   - JavaScript 运行时错误捕获
+   - 使用 postMessage 进行父子框架通信
+   - 错误信息展示和状态管理
+
+3. **预览更新机制**
+   - 监听代码内容变化
+   - 重新构建和刷新预览内容
+   - 清理和重置沙箱环境
+
+#### 7.3 使用方式
+
+```typescript
+// 基础使用
+<CodePreviewSandbox
+  htmlContent={htmlCode}
+  cssContent={cssCode}
+  jsContent={jsCode}
+  height="600px"
+/>
+
+// 带错误处理的使用示例
+<CodePreviewSandbox
+  htmlContent={htmlCode}
+  cssContent={cssCode}
+  jsContent={jsCode}
+  onError={(error) => console.error('Preview Error:', error)}
+/>
+```
+
+#### 7.4 注意事项
+
+1. **安全考虑**
+   - 避免执行不受信任的代码
+   - 限制对敏感 API 的访问
+   - 防止跨站脚本攻击（XSS）
+
+2. **性能优化**
+   - 合理控制更新频率
+   - 避免频繁重建 iframe
+   - 资源加载优化
+
+3. **兼容性**
+   - 确保跨浏览器兼容性
+   - 处理不同设备和屏幕尺寸
+   - 响应式设计支持
