@@ -23,14 +23,14 @@ export default function PreviewPage() {
   useEffect(() => {
     const fetchPreviewData = async () => {
       if (!id) return;
-      
+
       try {
         // Fetch preview data from your API
         const response = await fetch(`/api/previews/${id}`);
         if (!response.ok) {
           throw new Error('Failed to load preview data');
         }
-        
+
         const data = await response.json();
         setPreviewData(data);
       } catch (err) {
@@ -56,7 +56,9 @@ export default function PreviewPage() {
   }
 
   if (!previewData) {
-    return <div className="flex items-center justify-center min-h-screen">No preview data found</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">No preview data found</div>
+    );
   }
 
   return (
@@ -67,11 +69,12 @@ export default function PreviewPage() {
       {previewData.metadata?.description && (
         <p className="text-gray-600 mb-6">{previewData.metadata.description}</p>
       )}
-      
+
       <CodePreviewSandbox
         htmlContent={previewData.html}
         cssContent={previewData.css}
         jsContent={previewData.javascript}
+        height="85vh"
       />
     </div>
   );
